@@ -12,6 +12,11 @@ st.set_page_config(
     layout="wide"
 )
 
+# Set matplotlib to use transparent background
+plt.rcParams['figure.facecolor'] = 'none'
+plt.rcParams['axes.facecolor'] = 'none'
+plt.rcParams['savefig.facecolor'] = 'none'
+
 # Custom CSS for better styling
 st.markdown("""
     <style>
@@ -183,7 +188,7 @@ with tab1:
         else:
             prices = [black_scholes_put(s, K, T, r, sigma) for s in spot_prices]
         
-        fig1, ax1 = plt.subplots(figsize=(10, 6))
+        fig1, ax1 = plt.subplots(figsize=(10, 6), facecolor='none')
         ax1.plot(spot_prices, prices, linewidth=2, color='#1f77b4')
         ax1.axvline(S, color='red', linestyle='--', alpha=0.7, label='Current Spot')
         ax1.axhline(option_price, color='green', linestyle='--', alpha=0.7, label='Current Price')
@@ -192,7 +197,7 @@ with tab1:
         ax1.set_title(f'{option_type} Option Price vs Spot Price', fontsize=14, fontweight='bold')
         ax1.grid(True, alpha=0.3)
         ax1.legend()
-        st.pyplot(fig1)
+        st.pyplot(fig1, transparent=True)
     
     with col2:
         # Price vs Volatility
@@ -202,7 +207,7 @@ with tab1:
         else:
             prices_vol = [black_scholes_put(S, K, T, r, v) for v in volatilities]
         
-        fig2, ax2 = plt.subplots(figsize=(10, 6))
+        fig2, ax2 = plt.subplots(figsize=(10, 6), facecolor='none')
         ax2.plot(volatilities, prices_vol, linewidth=2, color='#ff7f0e')
         ax2.axvline(sigma, color='red', linestyle='--', alpha=0.7, label='Current Volatility')
         ax2.axhline(option_price, color='green', linestyle='--', alpha=0.7, label='Current Price')
@@ -211,7 +216,7 @@ with tab1:
         ax2.set_title(f'{option_type} Option Price vs Volatility', fontsize=14, fontweight='bold')
         ax2.grid(True, alpha=0.3)
         ax2.legend()
-        st.pyplot(fig2)
+        st.pyplot(fig2, transparent=True)
 
 with tab2:
     st.markdown("### Sensitivity Heatmap: Volatility vs Spot Price")
@@ -229,7 +234,7 @@ with tab2:
             else:
                 option_prices_grid[i, j] = black_scholes_put(s, K, T, r, v)
     
-    fig3, ax3 = plt.subplots(figsize=(12, 8))
+    fig3, ax3 = plt.subplots(figsize=(12, 8), facecolor='none')
     sns.heatmap(option_prices_grid, 
                 xticklabels=np.round(spot_range_heat, 1)[::3],
                 yticklabels=np.round(vol_range_heat, 2)[::3],
@@ -241,7 +246,7 @@ with tab2:
     ax3.set_xlabel('Spot Price ($)', fontsize=12)
     ax3.set_ylabel('Volatility (σ)', fontsize=12)
     ax3.set_title(f'{option_type} Option Price Heatmap', fontsize=14, fontweight='bold')
-    st.pyplot(fig3)
+    st.pyplot(fig3, transparent=True)
     
     st.info(f"💡 Current position: Spot=${S:.2f}, Volatility={sigma:.2f}, Option Price=${option_price:.2f}")
 
@@ -262,7 +267,7 @@ with tab3:
         vegas.append(v)
         thetas.append(t)
     
-    fig4, ((ax1, ax2), (ax3, ax4)) = plt.subplots(2, 2, figsize=(14, 10))
+    fig4, ((ax1, ax2), (ax3, ax4)) = plt.subplots(2, 2, figsize=(14, 10), facecolor='none')
     
     # Delta
     ax1.plot(spot_prices_greeks, deltas, linewidth=2, color='#1f77b4')
@@ -297,7 +302,7 @@ with tab3:
     ax4.grid(True, alpha=0.3)
     
     plt.tight_layout()
-    st.pyplot(fig4)
+    st.pyplot(fig4, transparent=True)
 
 with tab4:
     st.markdown("### Profit/Loss Analysis at Expiration")
@@ -311,7 +316,7 @@ with tab4:
     
     profit = payoff - option_price
     
-    fig5, ax5 = plt.subplots(figsize=(12, 6))
+    fig5, ax5 = plt.subplots(figsize=(12, 6), facecolor='none')
     ax5.plot(spot_at_exp, profit, linewidth=2.5, color='#1f77b4', label='Profit/Loss')
     ax5.axhline(0, color='black', linestyle='-', linewidth=0.8)
     ax5.axvline(K, color='red', linestyle='--', alpha=0.7, label='Strike Price')
@@ -322,7 +327,7 @@ with tab4:
     ax5.set_title(f'{option_type} Option Profit/Loss Diagram', fontsize=14, fontweight='bold')
     ax5.grid(True, alpha=0.3)
     ax5.legend()
-    st.pyplot(fig5)
+    st.pyplot(fig5, transparent=True)
     
     # Calculate breakeven
     if option_type == "Call":
@@ -352,7 +357,7 @@ with tab5:
             deltas_vol.append(d)
             shares_needed.append(abs(d * total_options))
         
-        fig6, ax6 = plt.subplots(figsize=(10, 6))
+        fig6, ax6 = plt.subplots(figsize=(10, 6), facecolor='none')
         ax6.plot(spot_prices_delta, shares_needed, linewidth=2.5, color='#1f77b4')
         ax6.axvline(S, color='red', linestyle='--', alpha=0.7, label='Current Spot')
         ax6.axhline(shares_to_hedge, color='green', linestyle='--', alpha=0.7, label='Current Hedge')
@@ -361,7 +366,7 @@ with tab5:
         ax6.set_title(f'Delta Hedging Volume vs Spot Price ({num_contracts} contracts)', fontsize=14, fontweight='bold')
         ax6.grid(True, alpha=0.3)
         ax6.legend()
-        st.pyplot(fig6)
+        st.pyplot(fig6, transparent=True)
     
     with col2:
         # Delta Volume vs Time
@@ -374,7 +379,7 @@ with tab5:
             deltas_time.append(d)
             shares_time.append(abs(d * total_options))
         
-        fig7, ax7 = plt.subplots(figsize=(10, 6))
+        fig7, ax7 = plt.subplots(figsize=(10, 6), facecolor='none')
         ax7.plot(times, shares_time, linewidth=2.5, color='#ff7f0e')
         ax7.axvline(T, color='red', linestyle='--', alpha=0.7, label='Current Time')
         ax7.axhline(shares_to_hedge, color='green', linestyle='--', alpha=0.7, label='Current Hedge')
@@ -384,7 +389,7 @@ with tab5:
         ax7.grid(True, alpha=0.3)
         ax7.legend()
         ax7.invert_xaxis()  # So time flows left to right towards expiration
-        st.pyplot(fig7)
+        st.pyplot(fig7, transparent=True)
     
     # Delta Volume Heatmap
     st.markdown("### Delta Volume Heatmap: Spot Price vs Volatility")
@@ -401,7 +406,7 @@ with tab5:
             delta_grid[i, j] = d
             shares_grid[i, j] = abs(d * total_options)
     
-    fig8, (ax8, ax9) = plt.subplots(1, 2, figsize=(16, 6))
+    fig8, (ax8, ax9) = plt.subplots(1, 2, figsize=(16, 6), facecolor='none')
     
     # Delta heatmap
     sns.heatmap(delta_grid, 
@@ -429,7 +434,7 @@ with tab5:
     ax9.set_title(f'Shares to Hedge ({num_contracts} contracts)', fontsize=13, fontweight='bold')
     
     plt.tight_layout()
-    st.pyplot(fig8)
+    st.pyplot(fig8, transparent=True)
     
     # Summary table
     st.markdown("### Delta Hedging Summary Table")
