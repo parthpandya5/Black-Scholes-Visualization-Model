@@ -31,9 +31,21 @@ st.markdown("""
         padding: 0rem 1rem;
     }
     .stMetric {
-        background-color: #f0f2f6;
+        background-color: transparent !important;
         padding: 10px;
         border-radius: 5px;
+    }
+    [data-testid="stMetricValue"] {
+        background-color: transparent !important;
+    }
+    [data-testid="stMetricLabel"] {
+        background-color: transparent !important;
+    }
+    div[data-testid="metric-container"] {
+        background-color: rgba(38, 39, 48, 0.4) !important;
+        border: 1px solid rgba(250, 250, 250, 0.2);
+        padding: 15px;
+        border-radius: 8px;
     }
     h1 {
         color: #1f77b4;
