@@ -12,10 +12,17 @@ st.set_page_config(
     layout="wide"
 )
 
-# Set matplotlib to use transparent background
+# Set matplotlib to use transparent background and light text for dark mode
 plt.rcParams['figure.facecolor'] = 'none'
 plt.rcParams['axes.facecolor'] = 'none'
 plt.rcParams['savefig.facecolor'] = 'none'
+plt.rcParams['text.color'] = 'white'
+plt.rcParams['axes.labelcolor'] = 'white'
+plt.rcParams['xtick.color'] = 'white'
+plt.rcParams['ytick.color'] = 'white'
+plt.rcParams['axes.edgecolor'] = 'white'
+plt.rcParams['grid.color'] = 'gray'
+plt.rcParams['grid.alpha'] = 0.3
 
 # Custom CSS for better styling
 st.markdown("""
@@ -188,16 +195,24 @@ with tab1:
         else:
             prices = [black_scholes_put(s, K, T, r, sigma) for s in spot_prices]
         
-        fig1, ax1 = plt.subplots(figsize=(10, 6), facecolor='none')
+        fig1, ax1 = plt.subplots(figsize=(10, 6))
+        fig1.patch.set_facecolor('none')
+        fig1.patch.set_alpha(0)
+        ax1.patch.set_facecolor('none')
+        ax1.patch.set_alpha(0)
         ax1.plot(spot_prices, prices, linewidth=2, color='#1f77b4')
         ax1.axvline(S, color='red', linestyle='--', alpha=0.7, label='Current Spot')
         ax1.axhline(option_price, color='green', linestyle='--', alpha=0.7, label='Current Price')
-        ax1.set_xlabel('Spot Price ($)', fontsize=12)
-        ax1.set_ylabel('Option Price ($)', fontsize=12)
-        ax1.set_title(f'{option_type} Option Price vs Spot Price', fontsize=14, fontweight='bold')
-        ax1.grid(True, alpha=0.3)
-        ax1.legend()
-        st.pyplot(fig1, transparent=True)
+        ax1.set_xlabel('Spot Price ($)', fontsize=12, color='white')
+        ax1.set_ylabel('Option Price ($)', fontsize=12, color='white')
+        ax1.set_title(f'{option_type} Option Price vs Spot Price', fontsize=14, fontweight='bold', color='white')
+        ax1.grid(True, alpha=0.3, color='gray')
+        ax1.legend(facecolor='#262730', edgecolor='white')
+        ax1.tick_params(colors='white')
+        for spine in ax1.spines.values():
+            spine.set_edgecolor('white')
+        st.pyplot(fig1, transparent=True, use_container_width=True)
+        plt.close(fig1)
     
     with col2:
         # Price vs Volatility
@@ -207,16 +222,24 @@ with tab1:
         else:
             prices_vol = [black_scholes_put(S, K, T, r, v) for v in volatilities]
         
-        fig2, ax2 = plt.subplots(figsize=(10, 6), facecolor='none')
+        fig2, ax2 = plt.subplots(figsize=(10, 6))
+        fig2.patch.set_facecolor('none')
+        fig2.patch.set_alpha(0)
+        ax2.patch.set_facecolor('none')
+        ax2.patch.set_alpha(0)
         ax2.plot(volatilities, prices_vol, linewidth=2, color='#ff7f0e')
         ax2.axvline(sigma, color='red', linestyle='--', alpha=0.7, label='Current Volatility')
         ax2.axhline(option_price, color='green', linestyle='--', alpha=0.7, label='Current Price')
-        ax2.set_xlabel('Volatility (σ)', fontsize=12)
-        ax2.set_ylabel('Option Price ($)', fontsize=12)
-        ax2.set_title(f'{option_type} Option Price vs Volatility', fontsize=14, fontweight='bold')
-        ax2.grid(True, alpha=0.3)
-        ax2.legend()
-        st.pyplot(fig2, transparent=True)
+        ax2.set_xlabel('Volatility (σ)', fontsize=12, color='white')
+        ax2.set_ylabel('Option Price ($)', fontsize=12, color='white')
+        ax2.set_title(f'{option_type} Option Price vs Volatility', fontsize=14, fontweight='bold', color='white')
+        ax2.grid(True, alpha=0.3, color='gray')
+        ax2.legend(facecolor='#262730', edgecolor='white')
+        ax2.tick_params(colors='white')
+        for spine in ax2.spines.values():
+            spine.set_edgecolor('white')
+        st.pyplot(fig2, transparent=True, use_container_width=True)
+        plt.close(fig2)
 
 with tab2:
     st.markdown("### Sensitivity Heatmap: Volatility vs Spot Price")
@@ -234,7 +257,11 @@ with tab2:
             else:
                 option_prices_grid[i, j] = black_scholes_put(s, K, T, r, v)
     
-    fig3, ax3 = plt.subplots(figsize=(12, 8), facecolor='none')
+    fig3, ax3 = plt.subplots(figsize=(12, 8))
+    fig3.patch.set_facecolor('none')
+    fig3.patch.set_alpha(0)
+    ax3.patch.set_facecolor('none')
+    ax3.patch.set_alpha(0)
     sns.heatmap(option_prices_grid, 
                 xticklabels=np.round(spot_range_heat, 1)[::3],
                 yticklabels=np.round(vol_range_heat, 2)[::3],
@@ -243,10 +270,16 @@ with tab2:
                 fmt='.2f',
                 cbar_kws={'label': 'Option Price ($)'},
                 ax=ax3)
-    ax3.set_xlabel('Spot Price ($)', fontsize=12)
-    ax3.set_ylabel('Volatility (σ)', fontsize=12)
-    ax3.set_title(f'{option_type} Option Price Heatmap', fontsize=14, fontweight='bold')
-    st.pyplot(fig3, transparent=True)
+    ax3.set_xlabel('Spot Price ($)', fontsize=12, color='white')
+    ax3.set_ylabel('Volatility (σ)', fontsize=12, color='white')
+    ax3.set_title(f'{option_type} Option Price Heatmap', fontsize=14, fontweight='bold', color='white')
+    ax3.tick_params(colors='white')
+    cbar = ax3.collections[0].colorbar
+    cbar.ax.yaxis.set_tick_params(color='white')
+    cbar.outline.set_edgecolor('white')
+    plt.setp(plt.getp(cbar.ax.axes, 'yticklabels'), color='white')
+    st.pyplot(fig3, transparent=True, use_container_width=True)
+    plt.close(fig3)
     
     st.info(f"💡 Current position: Spot=${S:.2f}, Volatility={sigma:.2f}, Option Price=${option_price:.2f}")
 
@@ -267,42 +300,52 @@ with tab3:
         vegas.append(v)
         thetas.append(t)
     
-    fig4, ((ax1, ax2), (ax3, ax4)) = plt.subplots(2, 2, figsize=(14, 10), facecolor='none')
+    fig4, ((ax1, ax2), (ax3, ax4)) = plt.subplots(2, 2, figsize=(14, 10))
+    fig4.patch.set_facecolor('none')
+    fig4.patch.set_alpha(0)
+    
+    for ax in [ax1, ax2, ax3, ax4]:
+        ax.patch.set_facecolor('none')
+        ax.patch.set_alpha(0)
+        ax.tick_params(colors='white')
+        for spine in ax.spines.values():
+            spine.set_edgecolor('white')
     
     # Delta
     ax1.plot(spot_prices_greeks, deltas, linewidth=2, color='#1f77b4')
     ax1.axvline(S, color='red', linestyle='--', alpha=0.7)
-    ax1.set_xlabel('Spot Price ($)')
-    ax1.set_ylabel('Delta')
-    ax1.set_title('Delta vs Spot Price', fontweight='bold')
-    ax1.grid(True, alpha=0.3)
+    ax1.set_xlabel('Spot Price ($)', color='white')
+    ax1.set_ylabel('Delta', color='white')
+    ax1.set_title('Delta vs Spot Price', fontweight='bold', color='white')
+    ax1.grid(True, alpha=0.3, color='gray')
     
     # Gamma
     ax2.plot(spot_prices_greeks, gammas, linewidth=2, color='#ff7f0e')
     ax2.axvline(S, color='red', linestyle='--', alpha=0.7)
-    ax2.set_xlabel('Spot Price ($)')
-    ax2.set_ylabel('Gamma')
-    ax2.set_title('Gamma vs Spot Price', fontweight='bold')
-    ax2.grid(True, alpha=0.3)
+    ax2.set_xlabel('Spot Price ($)', color='white')
+    ax2.set_ylabel('Gamma', color='white')
+    ax2.set_title('Gamma vs Spot Price', fontweight='bold', color='white')
+    ax2.grid(True, alpha=0.3, color='gray')
     
     # Vega
     ax3.plot(spot_prices_greeks, vegas, linewidth=2, color='#2ca02c')
     ax3.axvline(S, color='red', linestyle='--', alpha=0.7)
-    ax3.set_xlabel('Spot Price ($)')
-    ax3.set_ylabel('Vega')
-    ax3.set_title('Vega vs Spot Price', fontweight='bold')
-    ax3.grid(True, alpha=0.3)
+    ax3.set_xlabel('Spot Price ($)', color='white')
+    ax3.set_ylabel('Vega', color='white')
+    ax3.set_title('Vega vs Spot Price', fontweight='bold', color='white')
+    ax3.grid(True, alpha=0.3, color='gray')
     
     # Theta
     ax4.plot(spot_prices_greeks, thetas, linewidth=2, color='#d62728')
     ax4.axvline(S, color='red', linestyle='--', alpha=0.7)
-    ax4.set_xlabel('Spot Price ($)')
-    ax4.set_ylabel('Theta')
-    ax4.set_title('Theta vs Spot Price', fontweight='bold')
-    ax4.grid(True, alpha=0.3)
+    ax4.set_xlabel('Spot Price ($)', color='white')
+    ax4.set_ylabel('Theta', color='white')
+    ax4.set_title('Theta vs Spot Price', fontweight='bold', color='white')
+    ax4.grid(True, alpha=0.3, color='gray')
     
     plt.tight_layout()
-    st.pyplot(fig4, transparent=True)
+    st.pyplot(fig4, transparent=True, use_container_width=True)
+    plt.close(fig4)
 
 with tab4:
     st.markdown("### Profit/Loss Analysis at Expiration")
@@ -316,18 +359,26 @@ with tab4:
     
     profit = payoff - option_price
     
-    fig5, ax5 = plt.subplots(figsize=(12, 6), facecolor='none')
+    fig5, ax5 = plt.subplots(figsize=(12, 6))
+    fig5.patch.set_facecolor('none')
+    fig5.patch.set_alpha(0)
+    ax5.patch.set_facecolor('none')
+    ax5.patch.set_alpha(0)
     ax5.plot(spot_at_exp, profit, linewidth=2.5, color='#1f77b4', label='Profit/Loss')
-    ax5.axhline(0, color='black', linestyle='-', linewidth=0.8)
+    ax5.axhline(0, color='white', linestyle='-', linewidth=0.8)
     ax5.axvline(K, color='red', linestyle='--', alpha=0.7, label='Strike Price')
     ax5.fill_between(spot_at_exp, profit, 0, where=(profit > 0), alpha=0.3, color='green', label='Profit Zone')
     ax5.fill_between(spot_at_exp, profit, 0, where=(profit < 0), alpha=0.3, color='red', label='Loss Zone')
-    ax5.set_xlabel('Spot Price at Expiration ($)', fontsize=12)
-    ax5.set_ylabel('Profit/Loss ($)', fontsize=12)
-    ax5.set_title(f'{option_type} Option Profit/Loss Diagram', fontsize=14, fontweight='bold')
-    ax5.grid(True, alpha=0.3)
-    ax5.legend()
-    st.pyplot(fig5, transparent=True)
+    ax5.set_xlabel('Spot Price at Expiration ($)', fontsize=12, color='white')
+    ax5.set_ylabel('Profit/Loss ($)', fontsize=12, color='white')
+    ax5.set_title(f'{option_type} Option Profit/Loss Diagram', fontsize=14, fontweight='bold', color='white')
+    ax5.grid(True, alpha=0.3, color='gray')
+    ax5.legend(facecolor='#262730', edgecolor='white')
+    ax5.tick_params(colors='white')
+    for spine in ax5.spines.values():
+        spine.set_edgecolor('white')
+    st.pyplot(fig5, transparent=True, use_container_width=True)
+    plt.close(fig5)
     
     # Calculate breakeven
     if option_type == "Call":
@@ -357,16 +408,24 @@ with tab5:
             deltas_vol.append(d)
             shares_needed.append(abs(d * total_options))
         
-        fig6, ax6 = plt.subplots(figsize=(10, 6), facecolor='none')
+        fig6, ax6 = plt.subplots(figsize=(10, 6))
+        fig6.patch.set_facecolor('none')
+        fig6.patch.set_alpha(0)
+        ax6.patch.set_facecolor('none')
+        ax6.patch.set_alpha(0)
         ax6.plot(spot_prices_delta, shares_needed, linewidth=2.5, color='#1f77b4')
         ax6.axvline(S, color='red', linestyle='--', alpha=0.7, label='Current Spot')
         ax6.axhline(shares_to_hedge, color='green', linestyle='--', alpha=0.7, label='Current Hedge')
-        ax6.set_xlabel('Spot Price ($)', fontsize=12)
-        ax6.set_ylabel('Shares Needed to Hedge', fontsize=12)
-        ax6.set_title(f'Delta Hedging Volume vs Spot Price ({num_contracts} contracts)', fontsize=14, fontweight='bold')
-        ax6.grid(True, alpha=0.3)
-        ax6.legend()
-        st.pyplot(fig6, transparent=True)
+        ax6.set_xlabel('Spot Price ($)', fontsize=12, color='white')
+        ax6.set_ylabel('Shares Needed to Hedge', fontsize=12, color='white')
+        ax6.set_title(f'Delta Hedging Volume vs Spot Price ({num_contracts} contracts)', fontsize=14, fontweight='bold', color='white')
+        ax6.grid(True, alpha=0.3, color='gray')
+        ax6.legend(facecolor='#262730', edgecolor='white')
+        ax6.tick_params(colors='white')
+        for spine in ax6.spines.values():
+            spine.set_edgecolor('white')
+        st.pyplot(fig6, transparent=True, use_container_width=True)
+        plt.close(fig6)
     
     with col2:
         # Delta Volume vs Time
@@ -379,17 +438,25 @@ with tab5:
             deltas_time.append(d)
             shares_time.append(abs(d * total_options))
         
-        fig7, ax7 = plt.subplots(figsize=(10, 6), facecolor='none')
+        fig7, ax7 = plt.subplots(figsize=(10, 6))
+        fig7.patch.set_facecolor('none')
+        fig7.patch.set_alpha(0)
+        ax7.patch.set_facecolor('none')
+        ax7.patch.set_alpha(0)
         ax7.plot(times, shares_time, linewidth=2.5, color='#ff7f0e')
         ax7.axvline(T, color='red', linestyle='--', alpha=0.7, label='Current Time')
         ax7.axhline(shares_to_hedge, color='green', linestyle='--', alpha=0.7, label='Current Hedge')
-        ax7.set_xlabel('Time to Maturity (Years)', fontsize=12)
-        ax7.set_ylabel('Shares Needed to Hedge', fontsize=12)
-        ax7.set_title(f'Delta Hedging Volume vs Time Decay ({num_contracts} contracts)', fontsize=14, fontweight='bold')
-        ax7.grid(True, alpha=0.3)
-        ax7.legend()
+        ax7.set_xlabel('Time to Maturity (Years)', fontsize=12, color='white')
+        ax7.set_ylabel('Shares Needed to Hedge', fontsize=12, color='white')
+        ax7.set_title(f'Delta Hedging Volume vs Time Decay ({num_contracts} contracts)', fontsize=14, fontweight='bold', color='white')
+        ax7.grid(True, alpha=0.3, color='gray')
+        ax7.legend(facecolor='#262730', edgecolor='white')
+        ax7.tick_params(colors='white')
+        for spine in ax7.spines.values():
+            spine.set_edgecolor('white')
         ax7.invert_xaxis()  # So time flows left to right towards expiration
-        st.pyplot(fig7, transparent=True)
+        st.pyplot(fig7, transparent=True, use_container_width=True)
+        plt.close(fig7)
     
     # Delta Volume Heatmap
     st.markdown("### Delta Volume Heatmap: Spot Price vs Volatility")
@@ -406,7 +473,14 @@ with tab5:
             delta_grid[i, j] = d
             shares_grid[i, j] = abs(d * total_options)
     
-    fig8, (ax8, ax9) = plt.subplots(1, 2, figsize=(16, 6), facecolor='none')
+    fig8, (ax8, ax9) = plt.subplots(1, 2, figsize=(16, 6))
+    fig8.patch.set_facecolor('none')
+    fig8.patch.set_alpha(0)
+    
+    for ax in [ax8, ax9]:
+        ax.patch.set_facecolor('none')
+        ax.patch.set_alpha(0)
+        ax.tick_params(colors='white')
     
     # Delta heatmap
     sns.heatmap(delta_grid, 
@@ -417,9 +491,13 @@ with tab5:
                 annot=False,
                 cbar_kws={'label': 'Delta'},
                 ax=ax8)
-    ax8.set_xlabel('Spot Price ($)', fontsize=11)
-    ax8.set_ylabel('Volatility (σ)', fontsize=11)
-    ax8.set_title('Delta Values', fontsize=13, fontweight='bold')
+    ax8.set_xlabel('Spot Price ($)', fontsize=11, color='white')
+    ax8.set_ylabel('Volatility (σ)', fontsize=11, color='white')
+    ax8.set_title('Delta Values', fontsize=13, fontweight='bold', color='white')
+    cbar8 = ax8.collections[0].colorbar
+    cbar8.ax.yaxis.set_tick_params(color='white')
+    cbar8.outline.set_edgecolor('white')
+    plt.setp(plt.getp(cbar8.ax.axes, 'yticklabels'), color='white')
     
     # Shares needed heatmap
     sns.heatmap(shares_grid, 
@@ -429,12 +507,17 @@ with tab5:
                 annot=False,
                 cbar_kws={'label': 'Shares'},
                 ax=ax9)
-    ax9.set_xlabel('Spot Price ($)', fontsize=11)
-    ax9.set_ylabel('Volatility (σ)', fontsize=11)
-    ax9.set_title(f'Shares to Hedge ({num_contracts} contracts)', fontsize=13, fontweight='bold')
+    ax9.set_xlabel('Spot Price ($)', fontsize=11, color='white')
+    ax9.set_ylabel('Volatility (σ)', fontsize=11, color='white')
+    ax9.set_title(f'Shares to Hedge ({num_contracts} contracts)', fontsize=13, fontweight='bold', color='white')
+    cbar9 = ax9.collections[0].colorbar
+    cbar9.ax.yaxis.set_tick_params(color='white')
+    cbar9.outline.set_edgecolor('white')
+    plt.setp(plt.getp(cbar9.ax.axes, 'yticklabels'), color='white')
     
     plt.tight_layout()
-    st.pyplot(fig8, transparent=True)
+    st.pyplot(fig8, transparent=True, use_container_width=True)
+    plt.close(fig8)
     
     # Summary table
     st.markdown("### Delta Hedging Summary Table")
