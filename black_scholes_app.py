@@ -211,7 +211,7 @@ with tab1:
         ax1.tick_params(colors='white')
         for spine in ax1.spines.values():
             spine.set_edgecolor('white')
-        st.pyplot(fig1, transparent=True, use_container_width=True)
+        st.pyplot(fig1, transparent=True)
         plt.close(fig1)
     
     with col2:
@@ -238,7 +238,7 @@ with tab1:
         ax2.tick_params(colors='white')
         for spine in ax2.spines.values():
             spine.set_edgecolor('white')
-        st.pyplot(fig2, transparent=True, use_container_width=True)
+        st.pyplot(fig2, transparent=True)
         plt.close(fig2)
 
 with tab2:
@@ -278,7 +278,7 @@ with tab2:
     cbar.ax.yaxis.set_tick_params(color='white')
     cbar.outline.set_edgecolor('white')
     plt.setp(plt.getp(cbar.ax.axes, 'yticklabels'), color='white')
-    st.pyplot(fig3, transparent=True, use_container_width=True)
+    st.pyplot(fig3, transparent=True)
     plt.close(fig3)
     
     st.info(f"💡 Current position: Spot=${S:.2f}, Volatility={sigma:.2f}, Option Price=${option_price:.2f}")
@@ -344,7 +344,7 @@ with tab3:
     ax4.grid(True, alpha=0.3, color='gray')
     
     plt.tight_layout()
-    st.pyplot(fig4, transparent=True, use_container_width=True)
+    st.pyplot(fig4, transparent=True)
     plt.close(fig4)
 
 with tab4:
@@ -377,7 +377,7 @@ with tab4:
     ax5.tick_params(colors='white')
     for spine in ax5.spines.values():
         spine.set_edgecolor('white')
-    st.pyplot(fig5, transparent=True, use_container_width=True)
+    st.pyplot(fig5, transparent=True)
     plt.close(fig5)
     
     # Calculate breakeven
@@ -424,7 +424,7 @@ with tab5:
         ax6.tick_params(colors='white')
         for spine in ax6.spines.values():
             spine.set_edgecolor('white')
-        st.pyplot(fig6, transparent=True, use_container_width=True)
+        st.pyplot(fig6, transparent=True)
         plt.close(fig6)
     
     with col2:
@@ -455,7 +455,7 @@ with tab5:
         for spine in ax7.spines.values():
             spine.set_edgecolor('white')
         ax7.invert_xaxis()  # So time flows left to right towards expiration
-        st.pyplot(fig7, transparent=True, use_container_width=True)
+        st.pyplot(fig7, transparent=True)
         plt.close(fig7)
     
     # Delta Volume Heatmap
@@ -516,7 +516,7 @@ with tab5:
     plt.setp(plt.getp(cbar9.ax.axes, 'yticklabels'), color='white')
     
     plt.tight_layout()
-    st.pyplot(fig8, transparent=True, use_container_width=True)
+    st.pyplot(fig8, transparent=True)
     plt.close(fig8)
     
     # Summary table
